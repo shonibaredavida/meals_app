@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/screens/meal_details_screen.dart';
 import 'package:meals_app/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem({required this.meal, super.key});
+  const MealItem(
+      {required this.meal, super.key, required this.togglefavStatus});
   final Meal meal;
+  final Function(Meal) togglefavStatus;
   String get capitalizedComplexity {
     return meal.complexity.name[0].toUpperCase() +
         meal.complexity.name.substring(1);
@@ -24,7 +27,13 @@ class MealItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 3,
       child: InkWell(
-        onTap: () {},
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (ctx) => MealDetailsScreen(
+                      meal: meal,
+                      toggleFavStatus: togglefavStatus,
+                    ))),
         child: Stack(
           children: [
             FadeInImage(
