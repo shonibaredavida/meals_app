@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/providers/favorite_meal_provider.dart';
 import 'package:meals_app/widgets/meal_short_info.dart';
 import 'package:meals_app/widgets/meal_info.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class MealDetailsScreen extends StatelessWidget {
-  const MealDetailsScreen(
-      {super.key, required this.meal, required this.toggleFavStatus});
+class MealDetailsScreen extends ConsumerWidget {
+  const MealDetailsScreen({
+    super.key,
+    required this.meal,
+  });
   final Meal meal;
-  final void Function(Meal) toggleFavStatus;
 
   String get getLactoseDetail {
     return meal.isLactoseFree ? "Yes" : "No";
@@ -27,16 +30,28 @@ class MealDetailsScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
               onPressed: () {
-                toggleFavStatus(meal);
+                final isAdded = ref
+                    .read(favoriteMealProvider.notifier)
+                    .toggleFavoriteMealSatus(meal);
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(isAdded
+                        ? " Meals added to Favorites"
+                        : " Meal removed"),
+                  ),
+                );
               },
-              icon: const Icon(Icons.star_border))
+              icon: const Icon(
+                  /* isMealFav ? Icons.star_border_outlined : */ Icons
+                      .star_border))
         ],
       ),
       body: Padding(

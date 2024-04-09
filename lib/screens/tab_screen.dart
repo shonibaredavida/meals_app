@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/data/dummy_data.dart';
 import 'package:meals_app/models/meal.dart';
-import 'package:meals_app/providers/meals_proveider.dart';
+import 'package:meals_app/providers/favorite_meal_provider.dart';
+import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/screens/categories_screen.dart';
 import 'package:meals_app/screens/filters_screen.dart';
 import 'package:meals_app/screens/meals.dart';
@@ -24,27 +25,12 @@ class TabScreen extends ConsumerStatefulWidget {
 }
 
 class _TabScreenState extends ConsumerState<TabScreen> {
-  final List<Meal> _favMeals = [];
   void showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
       duration: const Duration(seconds: 5),
     ));
-  }
-
-  void _toggleMealFavStatus(Meal meal) {
-    final isExisting = _favMeals.contains(meal);
-    if (!isExisting) {
-      _favMeals.add(meal);
-      //  print(_favMeals[0].title);
-      showInfoMessage("Meal added to Favorite Meals");
-    } else {
-      _favMeals.remove(meal);
-      //   print(_favMeals);
-      showInfoMessage("Meal removed from Favorite Meals");
-    }
-    setState(() {});
   }
 
   int _selectedPageIndex = 0;
@@ -94,14 +80,13 @@ class _TabScreenState extends ConsumerState<TabScreen> {
     }).toList();
 
     Widget activePage = CategoriesScreen(
-      toggleFavoriteStatus: _toggleMealFavStatus,
       availableMeals: availableMeals,
     );
     var pageTitle = "Categories";
     if (_selectedPageIndex == 1) {
+      final favMeals = ref.watch(favoriteMealProvider);
       activePage = MealsScreen(
-        meals: _favMeals,
-        toggleFavStatus: _toggleMealFavStatus,
+        meals: favMeals,
       );
       pageTitle = "Your Favorites";
     }
