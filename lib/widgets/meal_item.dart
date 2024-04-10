@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/providers/favorite_meal_provider.dart';
 import 'package:meals_app/screens/meal_details_screen.dart';
 import 'package:meals_app/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class MealItem extends StatelessWidget {
+class MealItem extends ConsumerWidget {
   const MealItem({
     required this.meal,
     super.key,
@@ -21,7 +23,9 @@ class MealItem extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentFavoriteMeals = ref.watch(favoriteMealProvider);
+    final bool isFavMeal = currentFavoriteMeals.contains(meal);
     return Card(
       margin: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -82,7 +86,23 @@ class MealItem extends StatelessWidget {
                         ),
                         MealItemTrait(
                             icon: Icons.attach_money_sharp,
-                            label: capitalizedAfforadability)
+                            label: capitalizedAfforadability),
+                        isFavMeal
+                            ? Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 20,
+                                  ),
+                                  Icon(
+                                    Icons.star,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                    size: 30,
+                                  ),
+                                ],
+                              )
+                            : Container()
                       ],
                     )
                   ],

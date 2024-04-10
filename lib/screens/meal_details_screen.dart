@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/providers/favorite_meal_provider.dart';
+import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/widgets/meal_short_info.dart';
 import 'package:meals_app/widgets/meal_info.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -31,6 +32,8 @@ class MealDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentFavoriteMeals = ref.watch(favoriteMealProvider);
+    final bool isFavMeal = currentFavoriteMeals.contains(meal);
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
@@ -49,9 +52,7 @@ class MealDetailsScreen extends ConsumerWidget {
                   ),
                 );
               },
-              icon: const Icon(
-                  /* isMealFav ? Icons.star_border_outlined : */ Icons
-                      .star_border))
+              icon: Icon(isFavMeal ? Icons.star : Icons.star_border))
         ],
       ),
       body: Padding(
