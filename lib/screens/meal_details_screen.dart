@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/providers/favorite_meal_provider.dart';
-import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/widgets/meal_short_info.dart';
 import 'package:meals_app/widgets/meal_info.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -52,7 +51,19 @@ class MealDetailsScreen extends ConsumerWidget {
                   ),
                 );
               },
-              icon: Icon(isFavMeal ? Icons.star : Icons.star_border))
+              icon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) {
+                    return RotationTransition(
+                      turns:
+                          Tween<double>(end: 1, begin: 0.89).animate(animation),
+                      child: child,
+                    );
+                  },
+                  child: Icon(
+                    isFavMeal ? Icons.star : Icons.star_border,
+                    key: ValueKey(isFavMeal),
+                  )))
         ],
       ),
       body: Padding(
