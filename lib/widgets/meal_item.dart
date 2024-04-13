@@ -40,12 +40,15 @@ class MealItem extends ConsumerWidget {
                     ))),
         child: Stack(
           children: [
-            FadeInImage(
-                placeholder: MemoryImage(kTransparentImage),
-                fit: BoxFit.cover,
-                height: 200,
-                width: double.infinity,
-                image: NetworkImage(meal.imageUrl)),
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                  placeholder: MemoryImage(kTransparentImage),
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: double.infinity,
+                  image: NetworkImage(meal.imageUrl)),
+            ),
             Positioned(
               left: 0,
               bottom: 0,
